@@ -7,6 +7,8 @@ import { NUM_OF_GUESSES_ALLOWED, GAME_STATE } from "../../constants";
 import GuessInput from "../GuessInput";
 import GuessResults from "../GuessResults";
 import { checkGuess } from "../../game-helpers";
+import WonBanner from "../WonBanner";
+import LostBanner from "../LostBanner";
 
 // Pick a random word on every pageload.
 const answer = sample(WORDS);
@@ -42,20 +44,9 @@ function Game() {
         disabled={gameState !== GAME_STATE.ONGOING}
       />
       {gameState === GAME_STATE.WON && (
-        <div className="happy banner">
-          <p>
-            <strong>Congratulations!</strong> Got it in{" "}
-            <strong>{guessResults.length} guesses</strong>.
-          </p>
-        </div>
+        <WonBanner numOfGuesses={guessResults.length} />
       )}
-      {gameState === GAME_STATE.LOST && (
-        <div className="sad banner">
-          <p>
-            Sorry, the correct answer is <strong>{answer}</strong>.
-          </p>
-        </div>
-      )}
+      {gameState === GAME_STATE.LOST && <LostBanner answer={answer} />}
     </>
   );
 }
