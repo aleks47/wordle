@@ -19,16 +19,16 @@ function Game() {
 
   function handleGuessSubmit(guess) {
     const guessResult = checkGuess(guess, answer);
-    if (gameState === GAME_STATE.ONGOING) {
-      setGuessResults([...guessResults, guessResult]);
-    }
+    const nextGuessResults = [...guessResults, guessResult];
+
+    setGuessResults(nextGuessResults);
 
     if (guessResult.every((result) => result.status === "correct")) {
       setGameState(GAME_STATE.WON);
       return;
     }
 
-    if (guessResults.length + 1 === NUM_OF_GUESSES_ALLOWED) {
+    if (nextGuessResults.length === NUM_OF_GUESSES_ALLOWED) {
       setGameState(GAME_STATE.LOST);
       return;
     }
@@ -37,12 +37,15 @@ function Game() {
   return (
     <>
       <GuessResults guessResults={guessResults} />
-      <GuessInput onGuessSubmit={handleGuessSubmit} />
+      <GuessInput
+        onGuessSubmit={handleGuessSubmit}
+        disabled={gameState !== GAME_STATE.ONGOING}
+      />
       {gameState === GAME_STATE.WON && (
         <div className="happy banner">
           <p>
-            <strong>Congratulations!</strong> Got it in
-            <strong> {guessResults.length} guesses</strong>.
+            <strong>Congratulations!</strong> Got it in{" "}
+            <strong>{guessResults.length} guesses</strong>.
           </p>
         </div>
       )}
